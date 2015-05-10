@@ -1,28 +1,54 @@
-<TeamBox@Widget>:
-    canvas:
-        Rectangle:
-            pos: self.center_x-5, self.center_y
-            size: 100, 100
+<ListItem>
+    orientation: 'horizontal'
+    name: name
+    left: left
+    right: right
 
-AccordionItem:
+    Button:
+        id: left
+        size_hint_x: 0.1
+        text: '<-'
+        on_press: self.parent.on_btnleft(name.text)
+    Label:
+        id: name
+        size_hint_x: 0.3
+        text: 'noname'
+    Button:
+        id: right
+        size_hint_x: 0.1
+        text: '->'
+        on_press: self.parent.on_btnright(name.text)
+
+PrepareScene:
+    red_list: red_list
+    neutral_list: neutral_list
+    blue_list: blue_list
     graph: graph
+
     PaddedBoxLayout:
         orientation: 'vertical'
-#        BoxLayout:
-#            size_hint_y: 0.3
-#            TeamBox:
-#                canvas.before:
-#                    Color:
-#                        rgba: 1, 0, 0, 1
-#
-#            Button:
-#                text: 'hoey'
-#
-#            TeamBox:
-#                canvas.before:
-#                    Color:
-#                        rgba: 0, 0, 1, 1
-#
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: 'horizontal'
+            spacing: 200
+
+            RedList:
+                id: red_list
+                neutral_list: neutral_list
+                orientation: 'vertical'
+
+            NeutralList:
+                id: neutral_list
+                red_list: red_list
+                blue_list: blue_list
+
+                orientation: 'vertical'
+
+            BlueList:
+                id: blue_list
+                neutral_list: neutral_list
+                orientation: 'vertical' 
+
         BoxLayout:
             Graph:
                 id: graph

@@ -5,6 +5,7 @@ from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.accordion import Accordion, AccordionItem
 from kivy.properties import BooleanProperty, ListProperty, \
     NumericProperty, ObjectProperty, StringProperty 
 from kivy.garden.graph import Graph, MeshLinePlot, MeshStemPlot, SmoothLinePlot
@@ -22,53 +23,127 @@ import graph_calc
 gp_points  = partial(graph_calc.points, *(RATING_RANGE))
 new_rating = partial(trueskill.Rating, mu=50.0, sigma=16.3333)
 
+class EvalLayout(Accordion):
+    prepare = ObjectProperty(None)
 
-class EvalLayout(BoxLayout):
-    acc = ObjectProperty(None)
+class PrepareScene(AccordionItem):
+    # kv ref
+    red_list     = ObjectProperty(None)
+    neutral_list = ObjectProperty(None)
+    blue_list    = ObjectProperty(None)
+    graph        = ObjectProperty(None)
+
+    # py ref
+    plotr = ObjectProperty(None)
+    plotb = ObjectProperty(None)
+    plotv = ObjectProperty(None)
+
+    def __init__(self, *args, **kwargs):
+        super(PrepareScene, self).__init__(*args, **kwargs)
+
+class RedList(BoxLayout):
+    neutral_list = ObjectProperty(None)
+
+    def add_player(self, player):
+        row = ListItem(player, {'right': self.neutral_list})
+        self.add_widget(row)
+
+    def remove_player(self, player):
+        pass
+    
+
+class NeutralList(BoxLayout):
+    red_list = ObjectProperty(None)
+    blue_list = ObjectProperty(None)
+
+    def add_player(self, player):
+        btn_target = \
+            {'left': self.red_list, 'right': self.blue_list}
+        row = ListItem(player, btn_target)
+        self.add_widget(row)
+
+    def remove_player(self, player):
+        pass
+
+class BlueList(BoxLayout):
+    neutral_list = ObjectProperty(None)
+
+    def add_player(self, player):
+        row = ListItem(player, {'left': self.neutral_list})
+        self.add_widget(row)
+
+    def remove_player(self, player):
+        pass
+
+class ListItem(BoxLayout):
+    name  = ObjectProperty(None)
+    left  = ObjectProperty(None)
+    right = ObjectProperty(None)
+
+    def __init__(self, player, btn_target):
+        super(ListItem, self).__init__()
+        self.player     = player
+        self.btn_target = btn_target
+
+        if 'left'  not in btn_target:
+            self.remove_widget(self.left)
+        if 'right' not in btn_target:
+            self.remove_widget(self.right)
+
+        self.name.text  = player['name']
+
+    def on_btnleft(self, name):
+        self._move_to(self.btn_target['left'])
+
+    def on_btnright(self, name):
+        self._move_to(self.btn_target['right'])
+
+    def _move_to(self, target):
+        self.parent.remove_player(self.player)
+        self.parent.remove_widget(self)
+        target.add_player(self.player)
+
 
 class EvalApp(App):
     players = ListProperty([])
 
     def build(self):
-        self.build_players()
+        self.init_preaprescene()
+        self.init_players()
 
-        self.scenes = {}
-        acc = self.root.acc
+#        add_accitem('win',  Builder.load_file('scenes/result.kv'))
+#        add_accitem('draw', Builder.load_file('scenes/result.kv'))
+#        add_accitem('lose', Builder.load_file('scenes/result.kv'))
 
-        def add_accitem(title, plotsetter, scene):
-            scene.title = title
-            acc.add_widget(scene)
-            self.scenes[title] = scene
-            if scene.graph:
-                plotsetter(scene)
-            return scene
+        root = self.root
+        root.select(root.children[-1])
 
-        def prepare_plots(scene):
-            scene.plotr = SmoothLinePlot(color=COLOR_RED)
-            scene.graph.add_plot(scene.plotr)
-            scene.plotb = SmoothLinePlot(color=COLOR_BLUE)
-            scene.graph.add_plot(scene.plotb)
-            scene.plotv = SmoothLinePlot(color=COLOR_VIOLET)
-            scene.graph.add_plot(scene.plotv)
-        
-        def result_plots(graph):
-            pass
 
-        add_accitem('prepare', prepare_plots,
-            Builder.load_file('scenes/prepare.kv'))
+    def init_preaprescene(self):
+        accitem       = Builder.load_file('scenes/prepare.kv')
+        accitem.title = 'prepare'
 
-        add_accitem('win', result_plots,
-            Builder.load_file('scenes/result.kv'))
-        add_accitem('draw', result_plots,
-            Builder.load_file('scenes/result.kv'))
-        add_accitem('lose', result_plots,
-                Builder.load_file('scenes/result.kv'))
+        accitem.plotr = SmoothLinePlot(color=COLOR_RED)
+        accitem.plotb = SmoothLinePlot(color=COLOR_BLUE)
+        accitem.plotv = SmoothLinePlot(color=COLOR_VIOLET)
 
-        acc.select(acc.children[-1])
+        graph = accitem.graph
+        graph.add_plot(accitem.plotr)
+        graph.add_plot(accitem.plotb)
+        graph.add_plot(accitem.plotv)
 
-    def build_players(self):
-        for i in xrange(4):
-            self.players.append(new_rating())
+        self.root.prepare = accitem
+        self.root.add_widget(accitem)
+
+    def init_players(self):
+        for name in PLAYERS:
+            self.players.append( {'name': name, 'rating': new_rating()} )
+
+        neutral_list = self.root.prepare.neutral_list
+        for p in self.players:
+             neutral_list.add_player(p)
+
+
 
 #        points = [(x, scipy.stats.norm(50, 16.3).pdf(x)) for x in range(0, 100)]
 #

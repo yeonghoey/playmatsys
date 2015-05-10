@@ -1,3 +1,6 @@
+from kivy.config import Config
+Config.read('config.ini')
+
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.widget import Widget

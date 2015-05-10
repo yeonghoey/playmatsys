@@ -1,0 +1,5 @@
+RATING_RANGE = (0, 100)
+
+COLOR_RED    = (1, 0, 0, 1)
+COLOR_BLUE   = (0, 0, 1, 1)
+COLOR_VIOLET = (1, 0, 1, 1)

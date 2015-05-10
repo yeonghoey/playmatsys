@@ -5,27 +5,24 @@
             size: 100, 100
 
 AccordionItem:
-    title: "prepare match"
     graph: graph
-    BoxLayout:
+    PaddedBoxLayout:
         orientation: 'vertical'
-
-        BoxLayout:
-            size_hint_y: 0.4
-
-            TeamBox:
-                canvas.before:
-                    Color:
-                        rgba: 1, 0, 0, 1
-
-            Button:
-                text: 'hoey'
-
-            TeamBox:
-                canvas.before:
-                    Color:
-                        rgba: 0, 0, 1, 1
-
+#        BoxLayout:
+#            size_hint_y: 0.3
+#            TeamBox:
+#                canvas.before:
+#                    Color:
+#                        rgba: 1, 0, 0, 1
+#
+#            Button:
+#                text: 'hoey'
+#
+#            TeamBox:
+#                canvas.before:
+#                    Color:
+#                        rgba: 0, 0, 1, 1
+#
         BoxLayout:
             Graph:
                 id: graph

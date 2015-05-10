@@ -9,10 +9,10 @@ from kivy.garden.graph import Graph, MeshLinePlot, MeshStemPlot, SmoothLinePlot
 from math import sin
 import scipy.stats
 
-class MatSysSkillScreen(Screen):
+class EvalScreen(Screen):
     graph = ObjectProperty(None)
 
-class MatSysSkillApp(App):
+class EvalApp(App):
     def build(self):
         self.go_next_screen()
 
@@ -59,4 +59,4 @@ class MatSysSkillApp(App):
         sm.add_widget(screen)
 
 if __name__ == '__main__':
-    MatSysSkillApp().run()
+    EvalApp().run()

@@ -1,0 +1,45 @@
+<TeamBox@Widget>:
+    canvas:
+        Rectangle:
+            pos: self.center_x-5, self.center_y
+            size: 100, 100
+
+MatSysSkillScreen:
+    name: "Before"
+    graph: graph
+    BoxLayout:
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint_y: 0.4
+
+            TeamBox:
+                canvas.before:
+                    Color:
+                        rgba: 1, 0, 0, 1
+
+            Button:
+                text: 'hoey'
+
+            TeamBox:
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 1, 1
+
+        BoxLayout:
+            Graph:
+                id: graph
+                xlabel: 'X'
+                ylabel: 'Y'
+                x_ticks_minor: 5
+                x_ticks_major: 10
+                y_ticks_major: 0.1
+                y_grid_label: True
+                x_grid_label: True
+                padding: 5
+                x_grid: True
+                y_grid: True
+                xmin: 0
+                xmax: 100
+                ymin: 0
+                ymax: 0.5

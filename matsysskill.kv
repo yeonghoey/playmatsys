@@ -1,11 +1,17 @@
 BoxLayout:
     orientation: 'vertical'
+    ScreenManager:
+        id: sm
+#        on_current_screen:
+#            spnr.text = args[1].name
+#            idx = app.screen_names.index(args[1].name)
+#            if idx > -1: app.hierarchy.append(idx)
 
     BoxLayout:
-        orientation: 'horizontal'
-
-    BoxLayout:
+        size_hint_y: 0.2
         orientation: 'horizontal'
 
         Button:
             text: 'Test'
+            on_release: app.go_next_screen()
+            #important: True

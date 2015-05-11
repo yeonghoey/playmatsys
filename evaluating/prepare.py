@@ -149,7 +149,7 @@ class CompGraphLayout(BoxLayout):
 
 def _calc_maxes(points):
     if not points:
-        return GRAPH_XMAX, GRAPH_YMAX
+        return DEFAULT_GRAPH_XMAX, DEFAULT_GRAPH_YMAX
 
     xs, ys = zip(*points)
     return max(xs), max(ys)

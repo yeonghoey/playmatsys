@@ -1,3 +1,6 @@
+#:import DEFAULT_GRAPH_XMAX settings.DEFAULT_GRAPH_XMAX
+#:import DEFAULT_GRAPH_YMAX settings.DEFAULT_GRAPH_YMAX
+
 TopLayout:
     mainacc: mainacc
 
@@ -10,18 +13,18 @@ TopLayout:
 <Graph>:
     xlabel: 'X'
     ylabel: 'Y'
-    x_ticks_minor: 5
-    x_ticks_major: 10
-    y_ticks_major: 0.05
+    x_ticks_minor: DEFAULT_GRAPH_XMAX/20
+    x_ticks_major: DEFAULT_GRAPH_XMAX/10
+    y_ticks_major: DEFAULT_GRAPH_YMAX
     x_grid_label: True
     y_grid_label: True
     padding: 5
     x_grid: True
     y_grid: True
     xmin: 0
-    xmax: 100
+    xmax: DEFAULT_GRAPH_XMAX
     ymin: 0
-    ymax: 0.05
+    ymax: DEFAULT_GRAPH_YMAX
 
 <PaddedBoxLayout@BoxLayout>:
     padding: [50,50]

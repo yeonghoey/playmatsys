@@ -2,7 +2,7 @@
 from kivy.properties    import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.accordion import AccordionItem
-from kivy.garden.graph  import Graph, MeshStemPlot
+from kivy.garden.graph  import Graph, SmoothLinePlot, MeshStemPlot
 
 #stdlib
 from math      import sqrt
@@ -106,10 +106,10 @@ class CompGraphLayout(BoxLayout):
     pdata = ObjectProperty(None)
 
     def build(self):
-        self.lplot = MeshStemPlot(color=COLOR_LEFT)
+        self.lplot = SmoothLinePlot(color=COLOR_RED)
         self.graph.add_plot(self.lplot)
 
-        self.rplot = MeshStemPlot(color=COLOR_RIGHT)
+        self.rplot = SmoothLinePlot(color=COLOR_BLUE)
         self.graph.add_plot(self.rplot)
 
     def associate(self, pdata):

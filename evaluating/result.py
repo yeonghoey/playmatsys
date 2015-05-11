@@ -4,7 +4,7 @@ from kivy.properties     import ObjectProperty
 from kivy.uix.boxlayout  import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.accordion  import Accordion, AccordionItem
-from kivy.garden.graph   import Graph, MeshLinePlot, MeshStemPlot
+from kivy.garden.graph   import Graph, SmoothLinePlot, MeshStemPlot
 
 #stdlib
 from math      import sqrt
@@ -46,8 +46,8 @@ class ResultScene(BoxLayout):
         graphbuild_info = []
         for name, after in players:
             info = {'name': name, 'after': after} 
-            if   name in self.pdata.lteam: info['color'] = COLOR_LEFT
-            elif name in self.pdata.rteam: info['color'] = COLOR_RIGHT
+            if   name in self.pdata.lteam: info['color'] = COLOR_RED
+            elif name in self.pdata.rteam: info['color'] = COLOR_BLUE
             else: continue # unexpected
             info['before'] = self.pdata.rating(name)
             graphbuild_info.append(info)
@@ -78,12 +78,11 @@ class DiffGraphLayout(BoxLayout):
 
     def build(self, name, color, before, after):
         self.name.text = name
-        self.bplot        = MeshLinePlot(color=color)
+
+        self.bplot        = SmoothLinePlot(color=color)
         self.bplot.points = build_points(*before)
         self.graph.add_plot(self.bplot)
 
-        brighten     = color[:]
-        brighten[-1] = brighten[-1] + 0.2
-        self.aplot        = MeshStemPlot(color=brighten)
+        self.aplot        = SmoothLinePlot(color=COLOR_GRAY)
         self.aplot.points = build_points(*after)
         self.graph.add_plot(self.aplot)

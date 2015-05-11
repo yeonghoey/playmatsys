@@ -6,6 +6,30 @@ TopLayout:
 
     orientation: 'vertical'
 
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_y: 0.1
+        padding: 20
+
+        Button:
+            text: 'Prepare'
+            on_press: root.show_prepare()
+
+        BoxLayout:
+            orientation: 'horizontal'
+            Button:
+                size_hint_x: 0.2
+                text: 'Red Win'
+                on_press: root.show_lwin()
+            Button:
+                size_hint_x: 0.2
+                text: 'Draw'
+                on_press: root.show_draw()
+            Button:
+                size_hint_x: 0.2
+                text: 'Blue Win'
+                on_press: root.show_rwin()
+
     Scene:
         id: scene
 

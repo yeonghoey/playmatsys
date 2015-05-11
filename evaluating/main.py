@@ -16,14 +16,36 @@ from functools import partial
 # project dependencies
 from settings   import *
 from playerdata import PlayerData
+from prepare    import PrepareScene
+from result     import ResultScene
 
 
 class TopLayout(BoxLayout):
     scene = ObjectProperty(None)
 
+    def show_prepare(self):
+        self._swich_scene(self.scene.prepare)
+
+    def show_lwin(self):
+        self._swich_scene(self.scene.lwin)
+
+    def show_draw(self):
+        self._swich_scene(self.scene.draw)
+
+    def show_rwin(self):
+        self._swich_scene(self.scene.rwin)
+
+    def _swich_scene(self, scene):
+        self.scene.clear_widgets()
+        self.scene.add_widget(scene)
+        scene.refresh()
+
+
 class Scene(BoxLayout):
     prepare = ObjectProperty(None)
-    result  = ObjectProperty(None)
+    lwin    = ObjectProperty(None)
+    draw    = ObjectProperty(None)
+    rwin    = ObjectProperty(None)
 
 class EvaluatingApp(App):
     pdata = ObjectProperty(PlayerData())
@@ -31,46 +53,41 @@ class EvaluatingApp(App):
     def build(self):
         self.build_root()
         self.build_data()
+        self.show_prepare()
 
     def build_root(self):
         self.build_scene(self.root.scene)
 
     def build_scene(self, scene):
+        Builder.load_file('prepare.kv')
+        Builder.load_file('result.kv')
+
         scene.prepare = self.build_prepare()
-        scene.result  = self.build_result()
-        scene.add_widget(scene.prepare)
-        #scene.add_widget(self.build_result())
-        #mainacc.select(mainacc.children[-1])
+        scene.lwin    = self.build_result(self.pdata.lwin)
+        scene.draw    = self.build_result(self.pdata.draw)
+        scene.rwin    = self.build_result(self.pdata.rwin)
 
     def build_prepare(self):
-        prepare = Builder.load_file('prepare.kv')
-        prepare.build_graphlayout()
+        prepare = PrepareScene() 
+        prepare.build()
         prepare.associate(self.pdata)
         return prepare
 
-    def build_result(self):
-        result = Builder.load_file('result.kv')
-        result.build_inneracc()
-        result.associate(self.pdata)
+    def build_result(self, ratefunc):
+        result = ResultScene()
+        result.build()
+        result.associate(self.pdata, ratefunc)
         return result
 
     def build_data(self):
         players = self.pdata.players 
-        lteam   = self.pdata.lteam
         cteam   = self.pdata.cteam
-        rteam   = self.pdata.rteam
         for name in PLAYERS:
             players[name] = (MEAN, STDDEV)
-
-            if name == 'player1':
-                lteam.append(name)
-            elif name == 'player2':
-                rteam.append(name)
-            else:
-                cteam.append(name)
+            cteam.append(name)
 
     def show_prepare(self):
-        pass
+        self.root.show_prepare()
 
 
 if __name__ == '__main__':

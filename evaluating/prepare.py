@@ -19,8 +19,11 @@ class PrepareScene(BoxLayout):
     rlist   = ObjectProperty(None) # kv
     glayout = ObjectProperty(None) # kv
 
-    def build_graphlayout(self):
+    def build(self):
         self.glayout.build()
+
+    def refresh(self):
+        pass
 
     def associate(self, pdata):
         self.llist.associate(pdata)

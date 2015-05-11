@@ -16,44 +16,7 @@ from settings  import *
 from graphcalc import build_points
 
 
-class ResultAccItem(AccordionItem):
-    inneracc = ObjectProperty(None) # kv
-
-    def build_inneracc(self):
-        self.inneracc.build()
-
-    def associate(self, pdata):
-        self.inneracc.associate(pdata)
-
-    def on_collapse(self, instance, value):
-        super(ResultAccItem, self).on_collapse(instance, value)
-        if not value:
-            self.inneracc.refresh()
-
-
-class InnerAccordion(Accordion):
-    litem = ObjectProperty(None) # kv
-    ditem = ObjectProperty(None) # kv
-    ritem = ObjectProperty(None) # kv
-
-    def build(self):
-        self.litem.build()
-        self.ditem.build()
-        self.ritem.build()
-        self.select(self.children[-1])
-
-    def associate(self, pdata):
-        self.litem.associate(pdata, pdata.lwin)
-        self.ditem.associate(pdata, pdata.draw)
-        self.ritem.associate(pdata, pdata.rwin)
-
-    def refresh(self):
-        for accitem in self.children:
-            if not accitem.collapse:
-                accitem.rebuild_graph()
-
-
-class InnerAccItem(AccordionItem):
+class ResultScene(BoxLayout):
     graphslayout = ObjectProperty(None) # kv
     applybtn     = ObjectProperty(None) # kv
 
@@ -62,15 +25,6 @@ class InnerAccItem(AccordionItem):
 
     def build(self):
         self.applybtn.bind(on_press=self.apply_after)
-
-    def associate(self, pdata, ratefunc):
-        self.pdata    = pdata
-        self.ratefunc = ratefunc
-
-    def on_collapse(self, instance, value):
-        super(InnerAccItem, self).on_collapse(instance, value)
-        if value: return
-        self.rebuild_graph()
 
     def apply_after(self, button):
         if not self.pdata: return
@@ -81,8 +35,11 @@ class InnerAccItem(AccordionItem):
 
         App.get_running_app().show_prepare()
 
+    def associate(self, pdata, ratefunc):
+        self.pdata    = pdata
+        self.ratefunc = ratefunc
 
-    def rebuild_graph(self):
+    def refresh(self):
         afterplayers = self._build_after()
         players      = sorted(afterplayers.iteritems())
 
@@ -95,7 +52,7 @@ class InnerAccItem(AccordionItem):
             info['before'] = self.pdata.rating(name)
             graphbuild_info.append(info)
 
-        self.graphslayout.rebuild(graphbuild_info)
+        self.graphslayout.rebuild_graphs(graphbuild_info)
 
     def _build_after(self):
         if not self.pdata:    return {}
@@ -104,12 +61,12 @@ class InnerAccItem(AccordionItem):
 
 
 class GraphsLayout(GridLayout):
-    def rebuild(self, graphbuild_info):
+    def rebuild_graphs(self, graphbuild_info):
         self.clear_widgets()
         for info in graphbuild_info:
-            graph = DiffGraphLayout()
-            graph.build(**info)
-            self.add_widget(graph)
+            diffgraph = DiffGraphLayout()
+            diffgraph.build(**info)
+            self.add_widget(diffgraph)
             
 
 class DiffGraphLayout(BoxLayout):
@@ -121,12 +78,12 @@ class DiffGraphLayout(BoxLayout):
 
     def build(self, name, color, before, after):
         self.name.text = name
-        darken     = color[:]
-        darken[-1] = darken[-1]/4.0
-        self.bplot        = MeshStemPlot(color=darken)
+        self.bplot        = MeshLinePlot(color=color)
         self.bplot.points = build_points(*before)
         self.graph.add_plot(self.bplot)
 
-        self.aplot        = MeshStemPlot(color=color)
+        brighten     = color[:]
+        brighten[-1] = brighten[-1] + 0.2
+        self.aplot        = MeshStemPlot(color=brighten)
         self.aplot.points = build_points(*after)
         self.graph.add_plot(self.aplot)

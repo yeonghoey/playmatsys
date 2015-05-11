@@ -1,26 +1,6 @@
-#:import ResultAccItem result.ResultAccItem
+#:import ResultScene result.ResultScene
 
-ResultAccItem:
-    title: 'result'
-    inneracc: inneracc
-    InnerAccordion:
-        id: inneracc
-
-        litem: litem
-        ditem: ditem
-        ritem: ritem
-
-        InnerAccItem:
-            id: litem
-            title: 'Left'
-        InnerAccItem:
-            id: ditem
-            title: 'Draw'
-        InnerAccItem:
-            id: ritem
-            title: 'Right'
-
-<InnerAccItem>:
+<ResultScene>:
     graphslayout: graphslayout
     applybtn: applybtn
 
@@ -37,7 +17,6 @@ ResultAccItem:
                 id: applybtn
                 size_hint_x: 0.3
                 text: 'apply'
-
 
 <DiffGraphLayout>:
     orientation: 'vertical'

@@ -53,10 +53,18 @@ class EvaluatingApp(App):
 
     def build_data(self):
         players = self.pdata.players 
+        lteam   = self.pdata.lteam
         cteam   = self.pdata.cteam
+        rteam   = self.pdata.rteam
         for name in PLAYERS:
             players[name] = (MEAN, STDDEV)
-            cteam.append(name)
+
+            if name == 'player1':
+                lteam.append(name)
+            elif name == 'player2':
+                rteam.append(name)
+            else:
+                cteam.append(name)
 
 if __name__ == '__main__':
     EvaluatingApp().run()

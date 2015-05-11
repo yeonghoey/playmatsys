@@ -134,9 +134,7 @@ class CompGraphLayout(BoxLayout):
         self._update_graphmaxes()
 
     def _calc_teamrating(self, team):
-        players = self.pdata.players
-
-        ratings = [players[name] for name in team]
+        ratings = self.pdata.ratings(team)
         means, stddevs = zip(*ratings)
         tmean   = sum(means)
         tstddev = sqrt(sum(map(lambda x: x*x, stddevs)))

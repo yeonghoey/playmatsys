@@ -13,6 +13,7 @@ PrepareAccItem:
         orientation: 'vertical'
         BoxLayout:
             orientation: 'horizontal'
+            size_hint_y: 0.2
             spacing: 200
 
             LeftList:
@@ -26,48 +27,28 @@ PrepareAccItem:
             Graph:
                 id: graph
 
-#<ListItem>
-#    orientation: 'horizontal'
-#    name: name
-#    left: left
-#    right: right
-#
-#    Button:
-#        id: left
-#        size_hint_x: 0.1
-#        text: '<-'
-#        on_press: self.parent.on_btnleft(name.text)
-#    Label:
-#        id: name
-#        size_hint_x: 0.3
-#        text: 'noname'
-#    Button:
-#        id: right
-#        size_hint_x: 0.1
-#        text: '->'
-#        on_press: self.parent.on_btnright(name.text)
+<PlayerList>
+    orientation: 'vertical'
 
+<ListItem>
+    orientation: 'horizontal'
+    name: name.__self__
+    lbtn: lbtn.__self__
+    rbtn: rbtn.__self__
 
-#    PaddedBoxLayout:
-#        BoxLayout:
-#
-#            RedList:
-#                id: red_list
-#                neutral_list: neutral_list
-#                orientation: 'vertical'
-#
-#            NeutralList:
-#                id: neutral_list
-#                red_list: red_list
-#                blue_list: blue_list
-#
-#                orientation: 'vertical'
-#
-#            BlueList:
-#                id: blue_list
-#                neutral_list: neutral_list
-#                orientation: 'vertical' 
-#
-#        BoxLayout:
-#            Graph:
-#                id: graph
+    Button:
+        id: lbtn
+        size_hint_x: 0.1
+        text: '<-'
+        on_press: self.parent.on_lbtn(name.text)
+
+    Label:
+        id: name
+        size_hint_x: 0.3
+        text: 'noname'
+
+    Button:
+        id: rbtn
+        size_hint_x: 0.1
+        text: '->'
+        on_press: self.parent.on_rbtn(name.text)

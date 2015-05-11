@@ -20,7 +20,7 @@ import trueskill
 from settings import *
 import graph_calc
 
-from player import Player, Team, move_team
+from playerdata import PlayerData
 
 
 gp_points  = partial(graph_calc.points, *(RATING_RANGE))
@@ -35,23 +35,11 @@ class MainAccordion(Accordion):
 
 class EvaluatingApp(App):
 
-    lteam = ObjectProperty(None)
-    cteam = ObjectProperty(None)
-    rteam = ObjectProperty(None)
+    playerdata = ObjectProperty(PlayerData())
 
     def build(self):
-        self.build_data()
         self.build_root()
-
-    def build_data(self):
-        self.lteam = Team()
-        self.cteam = Team()
-        self.rteam = Team()
-
-        for n in PLAYERS:
-            player = Player( \
-                name = n, mean = MEAN, stddev = STDDEV)
-            self.cteam.add_player(player)
+        self.build_data()
 
     def build_root(self):
         self.build_mainacc(self.root.mainacc)
@@ -59,6 +47,11 @@ class EvaluatingApp(App):
     def build_mainacc(self, mainacc):
         accitem       = Builder.load_file('prepare.kv')
         accitem.title = 'prepare'
+        accitem.associate(self.playerdata)
+
+        #self.bind(lteam = accitem.llist.team_changed)
+        #self.bind(cteam = accitem.clist.team_changed)
+        #self.bind(rteam = accitem.rlist.team_changed)
 
         graph = accitem.graph
 
@@ -73,7 +66,14 @@ class EvaluatingApp(App):
 
         mainacc.add_widget(accitem)
         mainacc.prepare = accitem
-        
+
+
+    def build_data(self):
+        players = self.playerdata.players 
+        cteam   = self.playerdata.cteam
+        for name in PLAYERS:
+            players[name] = (MEAN, STDDEV)
+            cteam.append(name)
 
 if __name__ == '__main__':
     EvaluatingApp().run()
@@ -96,33 +96,6 @@ if __name__ == '__main__':
 #    def __init__(self, *args, **kwargs):
 #        super(PrepareScene, self).__init__(*args, **kwargs)
 #
-#class ListItem(BoxLayout):
-#    name  = ObjectProperty(None)
-#    left  = ObjectProperty(None)
-#    right = ObjectProperty(None)
-#
-#    def __init__(self, player, btn_target):
-#        super(ListItem, self).__init__()
-#        self.player     = player
-#        self.btn_target = btn_target
-#
-#        if 'left'  not in btn_target:
-#            self.remove_widget(self.left)
-#        if 'right' not in btn_target:
-#            self.remove_widget(self.right)
-#
-#        self.name.text  = player['name']
-#
-#    def on_btnleft(self, name):
-#        self._move_to(self.btn_target['left'])
-#
-#    def on_btnright(self, name):
-#        self._move_to(self.btn_target['right'])
-#
-#    def _move_to(self, target):
-#        self.parent.remove_player(self.player)
-#        self.parent.remove_widget(self)
-#        target.add_player(self.player)
 
 
 class EvalApp(App):

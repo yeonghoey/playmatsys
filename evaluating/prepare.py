@@ -13,7 +13,7 @@ from settings  import *
 from graphcalc import build_points
 
 
-class PrepareAccItem(AccordionItem):
+class PrepareScene(BoxLayout):
     llist   = ObjectProperty(None) # kv
     clist   = ObjectProperty(None) # kv
     rlist   = ObjectProperty(None) # kv
@@ -144,7 +144,7 @@ class CompGraphLayout(BoxLayout):
         lx, ly = _calc_maxes(self.lplot.points)
         rx, ry = _calc_maxes(self.rplot.points)
         self.graph.xmax = max(lx, rx)
-        self.graph.ymax = max(ly, ry)
+        self.graph.ymax = max(ly, ry, GRAPH_YMAX)
 
 def _calc_maxes(points):
     if not points:

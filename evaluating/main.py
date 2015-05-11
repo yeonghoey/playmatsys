@@ -19,10 +19,11 @@ from playerdata import PlayerData
 
 
 class TopLayout(BoxLayout):
-    mainacc = ObjectProperty(None)
+    scene = ObjectProperty(None)
 
-class MainAccordion(Accordion):
+class Scene(BoxLayout):
     prepare = ObjectProperty(None)
+    result  = ObjectProperty(None)
 
 class EvaluatingApp(App):
     pdata = ObjectProperty(PlayerData())
@@ -32,11 +33,13 @@ class EvaluatingApp(App):
         self.build_data()
 
     def build_root(self):
-        self.build_mainacc(self.root.mainacc)
+        self.build_scene(self.root.scene)
 
-    def build_mainacc(self, mainacc):
-        mainacc.add_widget(self.build_prepare())
-        mainacc.add_widget(self.build_result())
+    def build_scene(self, scene):
+        scene.prepare = self.build_prepare()
+        scene.result  = self.build_result()
+        scene.add_widget(scene.prepare)
+        #scene.add_widget(self.build_result())
         #mainacc.select(mainacc.children[-1])
 
     def build_prepare(self):
@@ -67,8 +70,7 @@ class EvaluatingApp(App):
                 cteam.append(name)
 
     def show_prepare(self):
-        mainacc = self.root.mainacc
-        mainacc.select(mainacc.children[-1])
+        pass
 
 
 if __name__ == '__main__':

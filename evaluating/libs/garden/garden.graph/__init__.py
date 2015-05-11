@@ -143,7 +143,7 @@ class Graph(Widget):
         super(Graph, self).__init__(**kwargs)
 
         with self.canvas:
-            self._fbo = Fbo(size=self.size, with_stencilbuffer=False)
+            self._fbo = Fbo(size=self.size, with_stencilbuffer=True)
 
         with self._fbo:
             self._background_color = Color(*self.background_color)

@@ -40,14 +40,16 @@ class EvaluatingApp(App):
         #mainacc.select(mainacc.children[-1])
 
     def build_prepare(self):
-        accitem = Builder.load_file('prepare.kv')
-        accitem.build_graphlayout()
-        accitem.associate(self.pdata)
-        return accitem
+        prepare = Builder.load_file('prepare.kv')
+        prepare.build_graphlayout()
+        prepare.associate(self.pdata)
+        return prepare
 
     def build_result(self):
-        accitem = Builder.load_file('result.kv')
-        return accitem
+        result = Builder.load_file('result.kv')
+        result.build_inneracc()
+        result.associate(self.pdata)
+        return result
 
     def build_data(self):
         players = self.pdata.players 

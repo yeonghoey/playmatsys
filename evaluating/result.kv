@@ -6,14 +6,28 @@ ResultAccItem:
     InnerAccordion:
         id: inneracc
 
+        litem: litem
+        ditem: ditem
+        ritem: ritem
+
+        InnerAccItem:
+            id: litem
+            title: 'Left'
+        InnerAccItem:
+            id: ditem
+            title: 'Draw'
+        InnerAccItem:
+            id: ritem
+            title: 'Right'
+
 <InnerAccItem>:
-    graphs: graphs
+    graphslayout: graphslayout
     applybtn: applybtn
 
     PaddedBoxLayout:
         orientation: 'vertical'
-        GridLayout:
-            id: graphs
+        GraphsLayout:
+            id: graphslayout
             rows: 2
 
         AnchorLayout:

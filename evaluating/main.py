@@ -20,88 +20,109 @@ import trueskill
 from settings import *
 import graph_calc
 
+from player import Player, Team, move_team
+
+
 gp_points  = partial(graph_calc.points, *(RATING_RANGE))
 new_rating = partial(trueskill.Rating, mu=50.0, sigma=16.3333)
 
-class EvalLayout(Accordion):
+
+class TopLayout(BoxLayout):
+    mainacc = ObjectProperty(None)
+
+class MainAccordion(Accordion):
     prepare = ObjectProperty(None)
 
-class PrepareScene(AccordionItem):
-    # kv ref
-    red_list     = ObjectProperty(None)
-    neutral_list = ObjectProperty(None)
-    blue_list    = ObjectProperty(None)
-    graph        = ObjectProperty(None)
+class EvaluatingApp(App):
 
-    # py ref
-    plotr = ObjectProperty(None)
-    plotb = ObjectProperty(None)
-    plotv = ObjectProperty(None)
+    lteam = ObjectProperty(None)
+    cteam = ObjectProperty(None)
+    rteam = ObjectProperty(None)
 
-    def __init__(self, *args, **kwargs):
-        super(PrepareScene, self).__init__(*args, **kwargs)
+    def build(self):
+        self.build_data()
+        self.build_root()
 
-class RedList(BoxLayout):
-    neutral_list = ObjectProperty(None)
+    def build_data(self):
+        self.lteam = Team()
+        self.cteam = Team()
+        self.rteam = Team()
 
-    def add_player(self, player):
-        row = ListItem(player, {'right': self.neutral_list})
-        self.add_widget(row)
+        for n in PLAYERS:
+            player = Player( \
+                name = n, mean = MEAN, stddev = STDDEV)
+            self.cteam.add_player(player)
 
-    def remove_player(self, player):
-        pass
-    
+    def build_root(self):
+        self.build_mainacc(self.root.mainacc)
 
-class NeutralList(BoxLayout):
-    red_list = ObjectProperty(None)
-    blue_list = ObjectProperty(None)
+    def build_mainacc(self, mainacc):
+        accitem       = Builder.load_file('prepare.kv')
+        accitem.title = 'prepare'
 
-    def add_player(self, player):
-        btn_target = \
-            {'left': self.red_list, 'right': self.blue_list}
-        row = ListItem(player, btn_target)
-        self.add_widget(row)
+        graph = accitem.graph
 
-    def remove_player(self, player):
-        pass
+#        plot = SmoothLinePlot(color=COLOR_LEFT)
+#        graph.add_plot(plot)
+#
+#        plotb = SmoothLinePlot(color=COLOR_BLUE)
+#        plotv = SmoothLinePlot(color=COLOR_VIOLET)
+#
+#        graph.add_plot(accitem.plotb)
+#        graph.add_plot(accitem.plotv)
 
-class BlueList(BoxLayout):
-    neutral_list = ObjectProperty(None)
+        mainacc.add_widget(accitem)
+        mainacc.prepare = accitem
+        
 
-    def add_player(self, player):
-        row = ListItem(player, {'left': self.neutral_list})
-        self.add_widget(row)
+if __name__ == '__main__':
+    EvaluatingApp().run()
 
-    def remove_player(self, player):
-        pass
-
-class ListItem(BoxLayout):
-    name  = ObjectProperty(None)
-    left  = ObjectProperty(None)
-    right = ObjectProperty(None)
-
-    def __init__(self, player, btn_target):
-        super(ListItem, self).__init__()
-        self.player     = player
-        self.btn_target = btn_target
-
-        if 'left'  not in btn_target:
-            self.remove_widget(self.left)
-        if 'right' not in btn_target:
-            self.remove_widget(self.right)
-
-        self.name.text  = player['name']
-
-    def on_btnleft(self, name):
-        self._move_to(self.btn_target['left'])
-
-    def on_btnright(self, name):
-        self._move_to(self.btn_target['right'])
-
-    def _move_to(self, target):
-        self.parent.remove_player(self.player)
-        self.parent.remove_widget(self)
-        target.add_player(self.player)
+#class EvalLayout(Accordion):
+#    prepare = ObjectProperty(None)
+#
+#class PrepareScene(AccordionItem):
+#    # kv ref
+#    red_list     = ObjectProperty(None)
+#    neutral_list = ObjectProperty(None)
+#    blue_list    = ObjectProperty(None)
+#    graph        = ObjectProperty(None)
+#
+#    # py ref
+#    plotr = ObjectProperty(None)
+#    plotb = ObjectProperty(None)
+#    plotv = ObjectProperty(None)
+#
+#    def __init__(self, *args, **kwargs):
+#        super(PrepareScene, self).__init__(*args, **kwargs)
+#
+#class ListItem(BoxLayout):
+#    name  = ObjectProperty(None)
+#    left  = ObjectProperty(None)
+#    right = ObjectProperty(None)
+#
+#    def __init__(self, player, btn_target):
+#        super(ListItem, self).__init__()
+#        self.player     = player
+#        self.btn_target = btn_target
+#
+#        if 'left'  not in btn_target:
+#            self.remove_widget(self.left)
+#        if 'right' not in btn_target:
+#            self.remove_widget(self.right)
+#
+#        self.name.text  = player['name']
+#
+#    def on_btnleft(self, name):
+#        self._move_to(self.btn_target['left'])
+#
+#    def on_btnright(self, name):
+#        self._move_to(self.btn_target['right'])
+#
+#    def _move_to(self, target):
+#        self.parent.remove_player(self.player)
+#        self.parent.remove_widget(self)
+#        target.add_player(self.player)
 
 
 class EvalApp(App):
@@ -119,21 +140,6 @@ class EvalApp(App):
         root.select(root.children[-1])
 
 
-    def init_preaprescene(self):
-        accitem       = Builder.load_file('scenes/prepare.kv')
-        accitem.title = 'prepare'
-
-        accitem.plotr = SmoothLinePlot(color=COLOR_RED)
-        accitem.plotb = SmoothLinePlot(color=COLOR_BLUE)
-        accitem.plotv = SmoothLinePlot(color=COLOR_VIOLET)
-
-        graph = accitem.graph
-        graph.add_plot(accitem.plotr)
-        graph.add_plot(accitem.plotb)
-        graph.add_plot(accitem.plotv)
-
-        self.root.prepare = accitem
-        self.root.add_widget(accitem)
 
     def init_players(self):
         for name in PLAYERS:
@@ -171,5 +177,3 @@ class EvalApp(App):
 #        sm = self.root.ids.sm
 #        sm.add_widget(screen)
 #
-if __name__ == '__main__':
-    EvalApp().run()

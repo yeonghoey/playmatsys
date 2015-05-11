@@ -1,0 +1,73 @@
+#:import PrepareAccItem prepare.PrepareAccItem
+#:import LeftList prepare.LeftList
+#:import CenterList prepare.CenterList
+#:import RightList prepare.RightList
+
+PrepareAccItem:
+    llist: llist
+    clist: clist
+    rlist: rlist
+    graph: graph
+
+    PaddedBoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 200
+
+            LeftList:
+                id: llist
+            CenterList:
+                id: clist
+            RightList:
+                id: rlist
+
+        CompGraphLayout:
+            Graph:
+                id: graph
+
+#<ListItem>
+#    orientation: 'horizontal'
+#    name: name
+#    left: left
+#    right: right
+#
+#    Button:
+#        id: left
+#        size_hint_x: 0.1
+#        text: '<-'
+#        on_press: self.parent.on_btnleft(name.text)
+#    Label:
+#        id: name
+#        size_hint_x: 0.3
+#        text: 'noname'
+#    Button:
+#        id: right
+#        size_hint_x: 0.1
+#        text: '->'
+#        on_press: self.parent.on_btnright(name.text)
+
+
+#    PaddedBoxLayout:
+#        BoxLayout:
+#
+#            RedList:
+#                id: red_list
+#                neutral_list: neutral_list
+#                orientation: 'vertical'
+#
+#            NeutralList:
+#                id: neutral_list
+#                red_list: red_list
+#                blue_list: blue_list
+#
+#                orientation: 'vertical'
+#
+#            BlueList:
+#                id: blue_list
+#                neutral_list: neutral_list
+#                orientation: 'vertical' 
+#
+#        BoxLayout:
+#            Graph:
+#                id: graph

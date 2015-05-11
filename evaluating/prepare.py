@@ -144,7 +144,7 @@ class CompGraphLayout(BoxLayout):
         lx, ly = _calc_maxes(self.lplot.points)
         rx, ry = _calc_maxes(self.rplot.points)
         self.graph.xmax = max(lx, rx)
-        self.graph.ymax = max(ly, ry, GRAPH_YMAX)
+        self.graph.ymax = max(ly, ry)
 
 def _calc_maxes(points):
     if not points:

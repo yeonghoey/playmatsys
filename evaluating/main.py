@@ -66,5 +66,10 @@ class EvaluatingApp(App):
             else:
                 cteam.append(name)
 
+    def show_prepare(self):
+        mainacc = self.root.mainacc
+        mainacc.select(mainacc.children[-1])
+
+
 if __name__ == '__main__':
     EvaluatingApp().run()

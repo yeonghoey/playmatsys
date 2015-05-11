@@ -1,4 +1,5 @@
 # kivy
+from kivy.app            import App
 from kivy.properties     import ObjectProperty
 from kivy.uix.boxlayout  import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -36,6 +37,9 @@ class InnerAccordion(Accordion):
     ritem = ObjectProperty(None) # kv
 
     def build(self):
+        self.litem.build()
+        self.ditem.build()
+        self.ritem.build()
         self.select(self.children[-1])
 
     def associate(self, pdata):
@@ -56,6 +60,9 @@ class InnerAccItem(AccordionItem):
     pdata    = ObjectProperty(None)
     ratefunc = ObjectProperty(None)
 
+    def build(self):
+        self.applybtn.bind(on_press=self.apply_after)
+
     def associate(self, pdata, ratefunc):
         self.pdata    = pdata
         self.ratefunc = ratefunc
@@ -64,6 +71,16 @@ class InnerAccItem(AccordionItem):
         super(InnerAccItem, self).on_collapse(instance, value)
         if value: return
         self.rebuild_graph()
+
+    def apply_after(self, button):
+        if not self.pdata: return
+
+        afterplayers = self._build_after()
+        for name, after in afterplayers.iteritems():
+            self.pdata.players[name] = after
+
+        App.get_running_app().show_prepare()
+
 
     def rebuild_graph(self):
         afterplayers = self._build_after()

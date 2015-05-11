@@ -9,7 +9,3 @@ class PlayerData(EventDispatcher):
     lteam   = ListProperty([])
     cteam   = ListProperty([])
     rteam   = ListProperty([])
-
-def move_team(from_team, to_team, name):
-    if name     in from_team: from_team.remove(name)
-    if name not in   to_team:   to_team.append(name)

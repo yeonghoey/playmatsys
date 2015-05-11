@@ -1,20 +1,31 @@
+# kivy
 from kivy.properties    import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.accordion import AccordionItem
-from kivy.garden.graph  import Graph, SmoothLinePlot, MeshStemPlot
+from kivy.garden.graph  import Graph, MeshLinePlot, MeshStemPlot
 
+#stdlib
+from math      import sqrt
 from functools import partial
 
-class PrepareAccItem(AccordionItem):
-    llist = ObjectProperty(None)
-    clist = ObjectProperty(None)
-    rlist = ObjectProperty(None)
-    graph = ObjectProperty(None)
+# project
+from settings  import *
+from graphcalc import build_points
 
-    def associate(self, playerdata):
-        self.llist.associate(playerdata)
-        self.clist.associate(playerdata)
-        self.rlist.associate(playerdata)
+class PrepareAccItem(AccordionItem):
+    llist   = ObjectProperty(None) # kv
+    clist   = ObjectProperty(None) # kv
+    rlist   = ObjectProperty(None) # kv
+    glayout = ObjectProperty(None) # kv
+
+    def build_graphlayout(self):
+        self.glayout.build()
+
+    def associate(self, pdata):
+        self.llist.associate(pdata)
+        self.clist.associate(pdata)
+        self.rlist.associate(pdata)
+        self.glayout.associate(pdata)
 
 
 class PlayerList(BoxLayout):
@@ -33,34 +44,34 @@ class PlayerList(BoxLayout):
 
 
 class LeftList(PlayerList):
-    def associate(self, playerdata):
-        playerdata.bind(lteam = self.team_changed)
+    def associate(self, pdata):
+        pdata.bind(lteam = self.team_changed)
         self.lbtn_handler = None
         self.rbtn_handler = \
-            partial(_move_team, playerdata.lteam, playerdata.cteam) 
+            partial(_move_team, pdata.lteam, pdata.cteam) 
 
 
 class CenterList(PlayerList):
-    def associate(self, playerdata):
-        playerdata.bind(cteam = self.team_changed)
+    def associate(self, pdata):
+        pdata.bind(cteam = self.team_changed)
         self.lbtn_handler = \
-            partial(_move_team, playerdata.cteam, playerdata.lteam) 
+            partial(_move_team, pdata.cteam, pdata.lteam) 
         self.rbtn_handler = \
-            partial(_move_team, playerdata.cteam, playerdata.rteam) 
+            partial(_move_team, pdata.cteam, pdata.rteam) 
 
 
 class RightList(PlayerList):
-    def associate(self, playerdata):
-        playerdata.bind(rteam = self.team_changed)
+    def associate(self, pdata):
+        pdata.bind(rteam = self.team_changed)
         self.lbtn_handler = \
-            partial(_move_team, playerdata.rteam, playerdata.cteam) 
+            partial(_move_team, pdata.rteam, pdata.cteam) 
         self.rbtn_handler = None
 
 
 class ListItem(BoxLayout):
-    name = ObjectProperty(None)
-    lbtn = ObjectProperty(None)
-    rbtn = ObjectProperty(None)
+    name = ObjectProperty(None) # kv
+    lbtn = ObjectProperty(None) # kv
+    rbtn = ObjectProperty(None) # kv
 
     def set_name(self, name):
         self.name.text = name
@@ -84,4 +95,61 @@ def _move_team(from_team, to_team, name):
 
 
 class CompGraphLayout(BoxLayout):
-    pass
+
+    graph = ObjectProperty(None) # kv
+    lplot = ObjectProperty(None)
+    rplot = ObjectProperty(None)
+    pdata = ObjectProperty(None)
+
+    def build(self):
+        self.lplot = MeshStemPlot(color=COLOR_LEFT)
+        self.graph.add_plot(self.lplot)
+
+        self.rplot = MeshStemPlot(color=COLOR_RIGHT)
+        self.graph.add_plot(self.rplot)
+
+    def associate(self, pdata):
+        self.pdata = pdata
+        pdata.bind(players=self.redraw_all)
+        pdata.bind(lteam=self.redraw_left)
+        pdata.bind(rteam=self.redraw_right)
+
+    def redraw_all(self, instance, value):
+        self.redraw_left (instance, self.pdata.lteam)
+        self.redraw_right(instance, self.pdata.rteam)
+
+    def redraw_left(self, instance, value):
+        self._redraw_target(self.lplot, value)
+
+    def redraw_right(self, instance, value):
+        self._redraw_target(self.rplot, value)
+
+    def _redraw_target(self, plot, team):
+        if not team:
+            plot.points = []
+            return
+        teamrating  = self._calc_teamrating(team)
+        plot.points = build_points(*teamrating)
+        self._update_graphmaxes()
+
+    def _calc_teamrating(self, team):
+        players = self.pdata.players
+
+        ratings = [players[name] for name in team]
+        means, stddevs = zip(*ratings)
+        tmean   = sum(means)
+        tstddev = sqrt(sum(map(lambda x: x*x, stddevs)))
+        return tmean, tstddev
+
+    def _update_graphmaxes(self):
+        lx, ly = _calc_maxes(self.lplot.points)
+        rx, ry = _calc_maxes(self.rplot.points)
+        self.graph.xmax = max(lx, rx)
+        self.graph.ymax = max(ly, ry)
+
+def _calc_maxes(points):
+    if not points:
+        return GRAPH_XMAX, GRAPH_YMAX
+
+    xs, ys = zip(*points)
+    return max(xs), max(ys)

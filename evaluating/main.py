@@ -13,18 +13,9 @@ from kivy.garden.graph import Graph, MeshLinePlot, MeshStemPlot, SmoothLinePlot
 # stdlib dependencies
 from functools import partial
 
-# trueskill
-import trueskill
-
 # project dependencies
-from settings import *
-import graph_calc
-
+from settings   import *
 from playerdata import PlayerData
-
-
-gp_points  = partial(graph_calc.points, *(RATING_RANGE))
-new_rating = partial(trueskill.Rating, mu=50.0, sigma=16.3333)
 
 
 class TopLayout(BoxLayout):
@@ -34,8 +25,7 @@ class MainAccordion(Accordion):
     prepare = ObjectProperty(None)
 
 class EvaluatingApp(App):
-
-    playerdata = ObjectProperty(PlayerData())
+    pdata = ObjectProperty(PlayerData())
 
     def build(self):
         self.build_root()
@@ -45,32 +35,18 @@ class EvaluatingApp(App):
         self.build_mainacc(self.root.mainacc)
 
     def build_mainacc(self, mainacc):
-        accitem       = Builder.load_file('prepare.kv')
+        mainacc.add_widget(self.build_prepare())
+
+    def build_prepare(self):
+        accitem = Builder.load_file('prepare.kv')
         accitem.title = 'prepare'
-        accitem.associate(self.playerdata)
-
-        #self.bind(lteam = accitem.llist.team_changed)
-        #self.bind(cteam = accitem.clist.team_changed)
-        #self.bind(rteam = accitem.rlist.team_changed)
-
-        graph = accitem.graph
-
-#        plot = SmoothLinePlot(color=COLOR_LEFT)
-#        graph.add_plot(plot)
-#
-#        plotb = SmoothLinePlot(color=COLOR_BLUE)
-#        plotv = SmoothLinePlot(color=COLOR_VIOLET)
-#
-#        graph.add_plot(accitem.plotb)
-#        graph.add_plot(accitem.plotv)
-
-        mainacc.add_widget(accitem)
-        mainacc.prepare = accitem
-
+        accitem.build_graphlayout()
+        accitem.associate(self.pdata)
+        return accitem
 
     def build_data(self):
-        players = self.playerdata.players 
-        cteam   = self.playerdata.cteam
+        players = self.pdata.players 
+        cteam   = self.pdata.cteam
         for name in PLAYERS:
             players[name] = (MEAN, STDDEV)
             cteam.append(name)

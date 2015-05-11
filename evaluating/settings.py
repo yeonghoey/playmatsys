@@ -1,5 +1,4 @@
-PLAYERS = ['player1', 'player2', 'player3', 'player4',
-           'player5', 'player6', 'player7', 'player8']
+PLAYERS = ['player1', 'player2', 'player3', 'player4']
 
 MEAN    = 50
 STDDEV  = 16.3333

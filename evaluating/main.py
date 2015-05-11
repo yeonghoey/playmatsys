@@ -37,7 +37,7 @@ class EvaluatingApp(App):
     def build_mainacc(self, mainacc):
         mainacc.add_widget(self.build_prepare())
         mainacc.add_widget(self.build_result())
-        mainacc.select(mainacc.children[-1])
+        #mainacc.select(mainacc.children[-1])
 
     def build_prepare(self):
         accitem = Builder.load_file('prepare.kv')

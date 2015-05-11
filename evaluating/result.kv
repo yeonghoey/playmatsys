@@ -2,3 +2,37 @@
 
 ResultAccItem:
     title: 'result'
+    inneracc: inneracc
+    InnerAccordion:
+        id: inneracc
+
+<InnerAccItem>:
+    graphs: graphs
+    applybtn: applybtn
+
+    PaddedBoxLayout:
+        orientation: 'vertical'
+        GridLayout:
+            id: graphs
+            rows: 2
+
+        AnchorLayout:
+            size_hint_y: 0.1
+            padding: 30
+            Button:
+                id: applybtn
+                size_hint_x: 0.3
+                text: 'apply'
+
+
+<DiffGraphLayout>:
+    orientation: 'vertical'
+
+    name: name
+    graph: graph
+
+    Graph:
+        id: graph
+    Label:
+        id: name
+        size_hint_y: 0.05

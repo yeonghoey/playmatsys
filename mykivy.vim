@@ -1,6 +1,6 @@
 au BufRead,BufNewFile *.kv set syntax=kivy
 
-let @k='eval_main.py'
+let @k='main.py'
 set tags+=/Applications/Kivy.app/Contents/Resources/kivy/kivy/tags
 
 "~/.vim/after/compiler/kivy.vim

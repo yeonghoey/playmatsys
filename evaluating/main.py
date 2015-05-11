@@ -37,8 +37,8 @@ class TopLayout(BoxLayout):
 
     def _swich_scene(self, scene):
         self.scene.clear_widgets()
-        self.scene.add_widget(scene)
         scene.refresh()
+        self.scene.add_widget(scene)
 
 
 class Scene(BoxLayout):

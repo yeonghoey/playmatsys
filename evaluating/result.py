@@ -79,10 +79,10 @@ class DiffGraphLayout(BoxLayout):
     def build(self, name, color, before, after):
         self.name.text = name
 
-        self.bplot        = SmoothLinePlot(color=color)
+        self.bplot        = SmoothLinePlot(color=COLOR_GRAY)
         self.bplot.points = build_points(*before)
         self.graph.add_plot(self.bplot)
 
-        self.aplot        = SmoothLinePlot(color=COLOR_GRAY)
+        self.aplot        = SmoothLinePlot(color=color)
         self.aplot.points = build_points(*after)
         self.graph.add_plot(self.aplot)

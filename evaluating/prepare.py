@@ -38,7 +38,11 @@ class PlayerList(BoxLayout):
         item.set_name(name)
         item.set_lbtn_handler(self.lbtn_handler)
         item.set_rbtn_handler(self.rbtn_handler)
+        self.decorate(item)
         return item
+
+    def decorate(self, item):
+        pass
 
     def team_changed(self, instnace, value):
         self.clear_widgets()
@@ -54,6 +58,8 @@ class LeftList(PlayerList):
         self.rbtn_handler = \
             partial(_move_team, pdata.lteam, pdata.cteam) 
 
+    def decorate(self, item):
+        item.name.color = COLOR_RED
 
 class CenterList(PlayerList):
     def associate(self, pdata):
@@ -71,6 +77,8 @@ class RightList(PlayerList):
             partial(_move_team, pdata.rteam, pdata.cteam) 
         self.rbtn_handler = None
 
+    def decorate(self, item):
+        item.name.color = COLOR_BLUE
 
 class ListItem(BoxLayout):
     name = ObjectProperty(None) # kv

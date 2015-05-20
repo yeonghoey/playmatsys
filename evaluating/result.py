@@ -67,6 +67,14 @@ class GraphsLayout(GridLayout):
             diffgraph = DiffGraphLayout()
             diffgraph.build(**info)
             self.add_widget(diffgraph)
+
+        if len(graphbuild_info) > 4:
+            self.cols = None
+            self.rows = 2
+        else:
+            self.rows = None
+            self.cols = 2
+
             
 
 class DiffGraphLayout(BoxLayout):

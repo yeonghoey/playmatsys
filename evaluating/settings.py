@@ -1,4 +1,4 @@
-PLAYERS = ['player1', 'player2', 'player3', 'player4']
+PLAYERS = ['Ronaldo', 'Zidan', 'Raul', 'Beckham', 'Figo', 'Carlos']
 
 MEAN    = 50
 STDDEV  = 16.3333

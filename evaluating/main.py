@@ -1,17 +1,11 @@
 # kivy dependencies
 from kivy.config import Config
 Config.read('config.ini')
-from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.accordion import Accordion, AccordionItem
-from kivy.properties import BooleanProperty, ListProperty, \
-    NumericProperty, ObjectProperty, StringProperty 
-from kivy.garden.graph import Graph, MeshLinePlot, MeshStemPlot, SmoothLinePlot
 
-# stdlib dependencies
-from functools import partial
+from kivy.app           import App
+from kivy.lang          import Builder
+from kivy.properties    import ObjectProperty
+from kivy.uix.boxlayout import BoxLayout
 
 # project dependencies
 from settings   import *
@@ -23,6 +17,7 @@ from result     import ResultScene
 class TopLayout(BoxLayout):
     scene = ObjectProperty(None)
 
+    # top layer(scene transitioning) buttons' event handlers
     def show_prepare(self):
         self._swich_scene(self.scene.prepare)
 
@@ -47,10 +42,12 @@ class Scene(BoxLayout):
     draw    = ObjectProperty(None)
     rwin    = ObjectProperty(None)
 
+
 class EvaluatingApp(App):
     pdata = ObjectProperty(PlayerData())
 
     def build(self):
+        '''kivy's app init point'''
         self.build_root()
         self.build_data()
         self.show_prepare()

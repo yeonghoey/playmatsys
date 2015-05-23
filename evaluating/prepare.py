@@ -26,6 +26,8 @@ class PrepareScene(BoxLayout):
         pass
 
     def associate(self, pdata):
+        '''bind model(pdata) with player lists and graph
+        '''
         self.llist.associate(pdata)
         self.clist.associate(pdata)
         self.rlist.associate(pdata)
@@ -33,6 +35,8 @@ class PrepareScene(BoxLayout):
 
 
 class PlayerList(BoxLayout):
+    '''base class for player lists'''
+
     def new_item(self, name):
         item = ListItem()
         item.set_name(name)
@@ -61,6 +65,7 @@ class LeftList(PlayerList):
     def decorate(self, item):
         item.name.color = COLOR_RED
 
+
 class CenterList(PlayerList):
     def associate(self, pdata):
         pdata.bind(cteam = self.team_changed)
@@ -79,6 +84,7 @@ class RightList(PlayerList):
 
     def decorate(self, item):
         item.name.color = COLOR_BLUE
+
 
 class ListItem(BoxLayout):
     name = ObjectProperty(None) # kv
@@ -107,7 +113,6 @@ def _move_team(from_team, to_team, name):
 
 
 class CompGraphLayout(BoxLayout):
-
     graph = ObjectProperty(None) # kv
     lplot = ObjectProperty(None)
     rplot = ObjectProperty(None)
@@ -160,6 +165,7 @@ class CompGraphLayout(BoxLayout):
         ymax = max(ly, ry, GRAPH_YMAX)
         if ymax > GRAPH_YMAX: ymax = GRAPH_YMAX*2
         self.graph.ymax = ymax
+
 
 def _calc_maxes(points):
     if not points:

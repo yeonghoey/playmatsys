@@ -1,5 +1,10 @@
+# player names are used as id.
 PLAYERS = ['Ronaldo', 'Zidan', 'Raul', 'Beckham', 'Figo', 'Carlos']
 
+# default values for trueskill calculator
+# I made this (50, 16.33)
+# even though trueskill's originals are (25, 8.33) 
+# because it ranges 0-100, it's more intuitive and natural I think.
 MEAN    = 50
 STDDEV  = 16.3333
 

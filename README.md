@@ -24,7 +24,7 @@ TrueSkill의 경기 예측과 레이팅 업데이트를 시각적으로 설명�
     hoey: /Applications/Kivy.app/Contents/Resources/venv/bin $ pip install scipy
     hoey: /Applications/Kivy.app/Contents/Resources/venv/bin $ pip install trueskill
 
-
+<br>
 [Kivy-1.9.0-ref3-osx.dmg][kivy_install] 버전으로 구현, 테스트되었습니다.
 > Implemented, Tested: [Kivy-1.9.0-ref3-osx.dmg][kivy_install]
 

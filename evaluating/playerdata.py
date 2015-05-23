@@ -25,25 +25,22 @@ class PlayerData(EventDispatcher):
     def ratings(self, team):
         return [self.players[name] for name in team]
 
-    def lwin(self):
-        return self._rate([0, 1])
-
-    def draw(self):
-        return self._rate([0, 0])
-
-    def rwin(self):
-        return self._rate([1, 0])
+    def lwin(self): return self._rate([1, 2])
+    def draw(self): return self._rate([1, 1])
+    def rwin(self): return self._rate([2, 1])
 
     def _rate(self, ranks):
-        lrs = self.ratings(self.lteam)
-        rrs = self.ratings(self.rteam)
+        lrs = self.ratings(self.lteam) # left  team ratings
+        rrs = self.ratings(self.rteam) # right team ratings
 
         # empty team, no match
         if (not lrs) or (not rrs): return {}
 
-        tsafter = _tscalc.rate([_trueskills(lrs), _trueskills(rrs)], ranks=ranks)
-
-        lafter, rafter = _floatpairs(tsafter[0]), _floatpairs(tsafter[1])
+        # float pairs -> trueskkill -> calculate post skills -> float pairs
+        tsgroups = [_trueskills(lrs), _trueskills(rrs)]
+        tsafter  = _tscalc.rate(tsgroups,ranks=ranks)
+        lafter   = _floatpairs(tsafter[0])
+        rafter   = _floatpairs(tsafter[1])
 
         afterplayers = {}
         for i, name in enumerate(self.lteam):
@@ -59,4 +56,3 @@ def _trueskills(floatpairs):
 
 def _floatpairs(trueskills):
     return map(lambda x: (x.mu, x.sigma), trueskills)
-

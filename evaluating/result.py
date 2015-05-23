@@ -40,15 +40,17 @@ class ResultScene(BoxLayout):
         self.ratefunc = ratefunc
 
     def refresh(self):
-        afterplayers = self._build_after()
+        afterplayers = self._build_after() # calculate expecting
         players      = sorted(afterplayers.iteritems())
 
         graphbuild_info = []
         for name, after in players:
             info = {'name': name, 'after': after} 
+
             if   name in self.pdata.lteam: info['color'] = COLOR_RED
             elif name in self.pdata.rteam: info['color'] = COLOR_BLUE
             else: continue # unexpected
+
             info['before'] = self.pdata.rating(name)
             graphbuild_info.append(info)
 
@@ -63,11 +65,13 @@ class ResultScene(BoxLayout):
 class GraphsLayout(GridLayout):
     def rebuild_graphs(self, graphbuild_info):
         self.clear_widgets()
+
         for info in graphbuild_info:
             diffgraph = DiffGraphLayout()
             diffgraph.build(**info)
             self.add_widget(diffgraph)
 
+        # hard code. make grid layout pretty
         if len(graphbuild_info) > 4:
             self.cols = None
             self.rows = 2
@@ -76,7 +80,6 @@ class GraphsLayout(GridLayout):
             self.cols = 2
 
             
-
 class DiffGraphLayout(BoxLayout):
     name  = ObjectProperty(None) # kv
     graph = ObjectProperty(None) # kv
